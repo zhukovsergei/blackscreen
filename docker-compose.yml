@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    container_name: node-lts-container
+    volumes:
+      - ./app:/app
+    ports:
+      - "5173:5173"
+    stdin_open: true
+    tty: true
+    command: bash
