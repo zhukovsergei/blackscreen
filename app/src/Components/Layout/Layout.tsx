@@ -1,5 +1,5 @@
 import {AppShell} from "@mantine/core";
-import { AppFooter } from "./Footer";
+// import { AppFooter } from "./Footer";
 import { ReactNode } from "react";
 import { AppHeader } from "./Header/Header.tsx";
 
@@ -18,9 +18,9 @@ export function Layout({ children }: LayoutProps) {
                 <AppHeader />
             </AppShell.Header>
             <AppShell.Main>{ children }</AppShell.Main>
-            <AppShell.Footer>
-                <AppFooter />
-            </AppShell.Footer>
+            {/*<AppShell.Footer>*/}
+            {/*    <AppFooter />*/}
+            {/*</AppShell.Footer>*/}
         </AppShell>
     );
 }
