@@ -14,15 +14,16 @@ export function Home() {
     return (
         <Container>
 
-            <Box
-                ref={ref}
-                w={520}
-                h={520}
-                bg={ color }
-                mx="auto"
-                onClick={() => toggleFullscreen()}
-            >
-            </Box>
+                <Box
+                    ref={ref}
+                    w={520}
+                    h={520}
+                    mt={"5rem"}
+                    bg={ color }
+                    mx="auto"
+                    onClick={() => toggleFullscreen()}
+                >
+                </Box>
 
             <Stack align="center">
                 <ColorPicker withPicker={false} swatchesPerRow={5}  size="xl" format="hex"

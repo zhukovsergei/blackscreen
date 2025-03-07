@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Anchor, Box, Burger, Container, Group } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { Anchor, Box, Container, Group } from '@mantine/core';
 import { Link, useLocation } from 'react-router-dom';
 import classes from './Header.module.css';
 
@@ -10,7 +9,7 @@ const mainLinks = [
 ];
 
 export function AppHeader() {
-    const [opened, { toggle }] = useDisclosure(false);
+    // const [opened, { toggle }] = useDisclosure(false);
     const location = useLocation();
     const [active, setActive] = useState(0);
 
@@ -35,18 +34,11 @@ export function AppHeader() {
     return (
         <header className={classes.header}>
             <Container className={classes.inner}>
-                <Box className={classes.links} visibleFrom="sm">
-                    <Group gap={0} justify="flex-end" className={classes.mainLinks}>
+                <Box ml="auto" className={classes.links} >
+                    <Group justify="flex-end" className={classes.mainLinks}>
                         {mainItems}
                     </Group>
                 </Box>
-                <Burger
-                    opened={opened}
-                    onClick={toggle}
-                    className={classes.burger}
-                    size="sm"
-                    hiddenFrom="sm"
-                />
             </Container>
         </header>
     );
