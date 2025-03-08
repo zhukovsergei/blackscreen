@@ -1,4 +1,4 @@
-import {Container, Stack, Button, Box, ColorPicker, Space} from '@mantine/core';
+import {Container, Stack, Button, Box, ColorPicker, Space, AspectRatio} from '@mantine/core';
 import { useFullscreen } from '@mantine/hooks';
 import {useState} from "react";
 
@@ -14,16 +14,17 @@ export function Home() {
     return (
         <Container>
 
+            <AspectRatio ratio={16 / 9}>
                 <Box
                     ref={ref}
-                    w={520}
-                    h={520}
                     mt={"5rem"}
                     bg={ color }
                     mx="auto"
                     onClick={() => toggleFullscreen()}
                 >
                 </Box>
+
+            </AspectRatio>
 
             <Stack align="center">
                 <ColorPicker withPicker={false} swatchesPerRow={5}  size="xl" format="hex"
