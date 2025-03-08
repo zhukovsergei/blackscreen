@@ -14,8 +14,12 @@ export function AppHeader() {
     const [active, setActive] = useState(0);
 
     useEffect(() => {
-        const currentIndex = mainLinks.findIndex(item => item.link === location.pathname);
-        setActive(currentIndex !== -1 ? currentIndex : 0);
+        if (location.pathname === '/') {
+            setActive(-1);
+        } else {
+            const currentIndex = mainLinks.findIndex(item => item.link === location.pathname);
+            setActive(currentIndex);
+        }
     }, [location.pathname]);
 
     const visibleLinks =
