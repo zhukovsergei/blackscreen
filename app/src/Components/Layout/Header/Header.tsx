@@ -18,7 +18,11 @@ export function AppHeader() {
         setActive(currentIndex !== -1 ? currentIndex : 0);
     }, [location.pathname]);
 
-    const mainItems = mainLinks.map((item, index) => (
+    const visibleLinks =
+        location.pathname === '/' ? mainLinks.filter(item => item.link !== '/') : mainLinks;
+
+
+    const mainItems = visibleLinks.map((item, index) => (
         <Anchor
             component={Link}
             to={item.link}
