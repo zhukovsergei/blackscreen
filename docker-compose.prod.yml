@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: blackscreen-prod
+    ports:
+      - "80:4173"
+    restart: always

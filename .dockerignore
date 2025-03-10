@@ -1,0 +1,20 @@
+# First ignore everything
+*
+**/*
+
+# Then explicitly allow specific files and directories
+!.dockerignore
+!Dockerfile*
+!docker-compose*.yml
+!app/
+!app/.yarn/
+!app/.yarn/**
+!app/package.json
+!app/yarn.lock
+!app/.yarnrc.yml
+
+# Finally exclude what we don't want
+app/node_modules/
+app/dist/
+app/.git/
+app/.pnp.*
