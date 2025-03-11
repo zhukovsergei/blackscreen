@@ -9,4 +9,4 @@ services:
       - "4173:4173"
     stdin_open: true
     tty: true
-    command: bash
+    command: ["/bin/bash"]
