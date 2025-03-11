@@ -1,0 +1,64 @@
+name: Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile.prod
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:${{ github.sha }}
+      
+      
+      - name: Deploy to Vultr
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VULTR_HOST }}
+          username: ${{ secrets.VULTR_USERNAME }}
+          key: ${{ secrets.VULTR_SSH_KEY }}
+          script: |
+            mkdir -p /opt/blackscreen
+            
+            cat > /opt/blackscreen/docker-compose.yml << 'EOL'
+            services:
+              app:
+                image: "${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:latest"
+                container_name: blackscreen-prod
+                ports:
+                  - "80:4173"
+                restart: always
+            EOL
+            
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+            cd /opt/blackscreen
+            docker-compose down || true
+            
+            docker-compose pull
+            docker-compose up -d
+            
+            docker image prune -af 
