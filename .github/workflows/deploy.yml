@@ -66,14 +66,14 @@ jobs:
             docker compose down --remove-orphans || true
             
             echo "Remove old images"
-            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:latest || true
+            docker rmi -f ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:latest || true
             
             docker compose pull || {
               echo "docker pull error"
               exit 1
             }
             
-            docker compose --env-file .env up -d || {
+            docker compose --env-file .env up -d --force-recreate || {
               echo "Error on docker up"
               exit 1
             }
