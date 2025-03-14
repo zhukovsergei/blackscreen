@@ -53,12 +53,35 @@ jobs:
             $(cat docker-compose.traefik.yml)
             EOL
             
-            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin || {
+              echo "Login error to Docker Hub"
+              exit 1
+            }
 
-            cd /opt/blackscreen
-            docker compose down || true
+            cd /opt/blackscreen || {
+              echo "no blackscreen folder"
+              exit 1
+            }
             
-            docker compose pull
-            docker compose --env-file .env up -d
+            docker compose down --remove-orphans || true
             
-            docker image prune -af 
+            echo "Remove old images"
+            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:latest || true
+            
+            docker compose pull || {
+              echo "docker pull error"
+              exit 1
+            }
+            
+            docker compose --env-file .env up -d || {
+              echo "Error on docker up"
+              exit 1
+            }
+            
+            docker ps | grep blackscreen-prod || {
+              echo "blackscreen-prod is not up"
+              docker compose logs
+              exit 1
+            }
+            
+            docker image prune -af
