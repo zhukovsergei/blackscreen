@@ -59,6 +59,9 @@ jobs:
                   - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
                   - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
                   - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+                  - "--api=true"
+                  - "--api.dashboard=false"
+                  - "--ping=true"
                 ports:
                   - "80:80"
                   - "443:443"
@@ -69,7 +72,7 @@ jobs:
                   - web
                 restart: always
                 healthcheck:
-                  test: ["CMD", "wget", "--spider", "http://localhost:80"]
+                  test: ["CMD", "wget", "--spider", "--no-verbose", "http://localhost:8080/ping"]
                   interval: 10s
                   timeout: 5s
                   retries: 3
