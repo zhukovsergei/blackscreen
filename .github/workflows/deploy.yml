@@ -68,6 +68,11 @@ jobs:
                 networks:
                   - web
                 restart: always
+                healthcheck:
+                  test: ["CMD", "wget", "--spider", "http://localhost:80"]
+                  interval: 10s
+                  timeout: 5s
+                  retries: 3
 
               app:
                 image: ${DOCKERHUB_USERNAME}/blackscreen-app:latest
