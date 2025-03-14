@@ -75,6 +75,9 @@ jobs:
                 expose:
                   - "4173"
                 restart: always
+                depends_on:
+                  traefik:
+                    condition: service_healthy
                 labels:
                   - "traefik.enable=true"
                   - "traefik.http.routers.app.rule=Host(`${DOMAIN_NAME}`)"
@@ -83,6 +86,11 @@ jobs:
                   - "traefik.http.services.app.loadbalancer.server.port=4173"
                 networks:
                   - web
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost:4173"]
+                  interval: 10s
+                  timeout: 5s
+                  retries: 3
 
             networks:
               web:
@@ -106,8 +114,10 @@ jobs:
               exit 1
             }
             
-            docker compose down --remove-orphans || true
-            
+            echo "Stopping existing containers..."
+            docker ps -q --filter "name=blackscreen-prod" | xargs -r docker stop
+            docker ps -q --filter "name=blackscreen-prod" | xargs -r docker rm
+
             echo "Remove old images"
             docker rmi -f ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:latest || true
             
