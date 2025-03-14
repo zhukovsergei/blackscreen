@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -32,8 +32,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:${{ github.sha }}
-      
-      
+
       - name: Deploy to Vultr
         uses: appleboy/ssh-action@master
         with:
@@ -43,14 +42,14 @@ jobs:
           script: |
             mkdir -p /opt/blackscreen
             
+            cat > /opt/blackscreen/.env << EOL
+            DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+            LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}
+            DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}
+            EOL
+            
             cat > /opt/blackscreen/docker-compose.yml << 'EOL'
-            services:
-              app:
-                image: "${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:latest"
-                container_name: blackscreen-prod
-                ports:
-                  - "80:4173"
-                restart: always
+            $(cat docker-compose.traefik.yml)
             EOL
             
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
@@ -59,6 +58,6 @@ jobs:
             docker-compose down || true
             
             docker-compose pull
-            docker-compose up -d
+            docker-compose --env-file .env up -d
             
             docker image prune -af 
