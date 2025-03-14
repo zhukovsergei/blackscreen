@@ -28,6 +28,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.prod
+          no-cache: true
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:latest
