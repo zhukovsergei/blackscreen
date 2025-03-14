@@ -43,12 +43,6 @@ jobs:
           script: |
             mkdir -p /opt/blackscreen
             
-            cat > /opt/blackscreen/.env << EOL
-            DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-            LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}
-            DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}
-            EOL
-            
             cat > /opt/blackscreen/docker-compose.yml << 'EOL'
             services:
               traefik:
@@ -61,7 +55,7 @@ jobs:
                   - "--entrypoints.web.address=:80"
                   - "--entrypoints.websecure.address=:443"
                   - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-                  - "--certificatesresolvers.myresolver.acme.email=\${LETSENCRYPT_EMAIL}"
+                  - "--certificatesresolvers.myresolver.acme.email=${LETSENCRYPT_EMAIL}"
                   - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
                   - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
                   - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
@@ -76,14 +70,14 @@ jobs:
                 restart: always
 
               app:
-                image: \${DOCKERHUB_USERNAME}/blackscreen-app:latest
+                image: ${DOCKERHUB_USERNAME}/blackscreen-app:latest
                 container_name: blackscreen-prod
                 expose:
                   - "4173"
                 restart: always
                 labels:
                   - "traefik.enable=true"
-                  - "traefik.http.routers.app.rule=Host(`\${DOMAIN_NAME}`)"
+                  - "traefik.http.routers.app.rule=Host(`${DOMAIN_NAME}`)"
                   - "traefik.http.routers.app.entrypoints=websecure"
                   - "traefik.http.routers.app.tls.certresolver=myresolver"
                   - "traefik.http.services.app.loadbalancer.server.port=4173"
@@ -97,6 +91,10 @@ jobs:
             volumes:
               letsencrypt:
             EOL
+            
+            sed -i "s/\${DOCKERHUB_USERNAME}/${{ secrets.DOCKERHUB_USERNAME }}/g" /opt/blackscreen/docker-compose.yml
+            sed -i "s/\${LETSENCRYPT_EMAIL}/${{ secrets.LETSENCRYPT_EMAIL }}/g" /opt/blackscreen/docker-compose.yml
+            sed -i "s/\${DOMAIN_NAME}/${{ secrets.DOMAIN_NAME }}/g" /opt/blackscreen/docker-compose.yml
             
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin || {
               echo "Login error to Docker Hub"
@@ -118,7 +116,7 @@ jobs:
               exit 1
             }
             
-            docker compose --env-file .env up -d --force-recreate || {
+            docker compose up -d --force-recreate || {
               echo "Error on docker up"
               exit 1
             }
