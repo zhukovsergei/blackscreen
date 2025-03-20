@@ -14,6 +14,9 @@ RUN yarn install --immutable
 
 COPY app/ ./
 
+ARG GA_ID
+RUN sed -i "s/__GA_ID__/${GA_ID}/g" ./index.html
+
 RUN yarn build
 
 # ==========================

@@ -30,6 +30,8 @@ jobs:
           file: ./Dockerfile.prod
           no-cache: true
           push: true
+          build-args: |
+            GA_ID=${{ secrets.GA_ID }}
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/blackscreen-app:${{ github.sha }}
