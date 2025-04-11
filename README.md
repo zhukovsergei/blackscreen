@@ -35,7 +35,7 @@ Add the following secrets to your GitHub repository:
 
 2. Connect it:
    ```bash
-   docker exec -it app bash
+   docker exec -it node-lts-container bash
    ```
 
 3. Install dependencies:
