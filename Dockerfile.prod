@@ -28,6 +28,8 @@ RUN corepack enable && corepack prepare yarn@4.7.0 --activate
 
 WORKDIR /app
 
+RUN apk add --no-cache nano vim
+
 COPY --from=builder /app/dist ./dist
 
 RUN npm install -g serve
