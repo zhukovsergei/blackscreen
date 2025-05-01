@@ -8,15 +8,13 @@ import {Layout} from "./Components/Layout/Layout.tsx";
 export default function App() {
   return (
       <MantineProvider theme={theme}>
-          <Box bg="gray.2" style={{ minHeight: "100vh" }}>
+          <Box bg="gray.2" style={{ minHeight: "100vh", overflowX: "scroll" }}>
               <BrowserRouter>
                   <Layout>
                       <AppRoutes />
                   </Layout>
               </BrowserRouter>
           </Box>
-
       </MantineProvider>
-
   );
 }
