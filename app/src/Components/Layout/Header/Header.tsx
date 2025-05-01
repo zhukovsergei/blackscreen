@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Anchor, Box, Container, Group } from '@mantine/core';
+import { Anchor, Box, Container, Group, ActionIcon } from '@mantine/core';
 import { Link, useLocation } from 'react-router-dom';
+import { IconBrandGithub } from '@tabler/icons-react';
 import classes from './Header.module.css';
 
 const mainLinks = [
@@ -42,7 +43,20 @@ export function AppHeader() {
     return (
         <header className={classes.header}>
             <Container className={classes.inner}>
-                <Box ml="auto" className={classes.links} >
+                <Box className={classes.links}>
+                    <Group justify="flex-start" className={classes.mainLinks}>
+                        <ActionIcon 
+                            component="a" 
+                            href="https://github.com/zhukovsergei/blackscreen" 
+                            target="_blank" 
+                            variant="subtle"
+                            size="lg"
+                        >
+                            <IconBrandGithub size={24} />
+                        </ActionIcon>
+                    </Group>
+                </Box>
+                <Box ml="auto" className={classes.links}>
                     <Group justify="flex-end" className={classes.mainLinks}>
                         {mainItems}
                     </Group>
