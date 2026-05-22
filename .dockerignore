@@ -7,8 +7,6 @@
 !Dockerfile*
 !docker-compose*.yml
 !app/
-!app/.yarn/
-!app/.yarn/**
 !app/package.json
 !app/yarn.lock
 !app/.yarnrc.yml
