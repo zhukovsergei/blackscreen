@@ -1,7 +1,7 @@
 # ==========================
 # 1) STAGE: build image
 # ==========================
-FROM node:18.14.2 AS builder
+FROM node:20 AS builder
 
 RUN corepack enable && corepack prepare yarn@4.7.0 --activate
 
@@ -22,7 +22,7 @@ RUN yarn build
 # ==========================
 # 2) STAGE: Production
 # ==========================
-FROM node:18.14.2-alpine AS production
+FROM node:20-alpine AS production
 
 RUN corepack enable && corepack prepare yarn@4.7.0 --activate
 

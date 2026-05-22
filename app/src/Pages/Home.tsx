@@ -1,5 +1,5 @@
 import {Container, Stack, Button, Box, ColorPicker, Space, AspectRatio} from '@mantine/core';
-import { useFullscreen, useHotkeys } from '@mantine/hooks';
+import { useFullscreenElement, useHotkeys } from '@mantine/hooks';
 import {useState, useEffect} from "react";
 
 function IconExternalLink() {
@@ -7,7 +7,7 @@ function IconExternalLink() {
 }
 
 export function Home() {
-    const { ref, toggle: toggleFullscreen, fullscreen } = useFullscreen();
+    const { ref, toggle: toggleFullscreen, fullscreen } = useFullscreenElement();
     const colors = ['#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff'];
     const [currentColorIndex, setCurrentColorIndex] = useState(0);
     const [color, setColor] = useState(colors[0]);
